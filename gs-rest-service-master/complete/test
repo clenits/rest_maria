@@ -1,0 +1,22 @@
+cd C:\Users\DawoonLee\Desktop\gs-rest-service-master\complete
+mvn clean package
+java -jar target/gs-rest-service-0.1.0.jar
+
+http://localhost:8080/auth?blckChnId=01063294236@kr&pwd=PWD
+http://localhost:8080/auth?blckChnId=01063294231@kr&pwd=PWD
+
+http://localhost:8080/custInfo?blckCustNum=9000000002
+
+INSERT INTO SVC_INFO
+(SVC_MGMT_NUM, SVC_NUM,CUST_NUM)
+VALUES
+("1234567891", "01052518437","1000000002")
+
+
+INSERT INTO CUST_INFO
+(CUST_NUM,CUST_NM,SSN_SEX_CD,SSN_BIRTH_DT)
+VALUES
+("1000000002","김선희","2","850208")
+
+{"returnCode":"1002","blckCustNum":"9000000002"}
+{"returnCode":"1001","blckCustNum":"9000000002"}
