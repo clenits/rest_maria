@@ -47,6 +47,7 @@ public class BlockChainController {
 						"");
 				
 				
+				
 				boolean result = blockChainDAO.InsertBlckChnMbrInfo(blckchnForInsert);
 				
 				if(result){
