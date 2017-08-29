@@ -5,7 +5,7 @@ public class SvcInfo {
 	 * CREATE TABLE SVC_INFO (
 	SVC_MGMT_NUM VARCHAR(10) NOT NULL,
 	SVC_NUM VARCHAR(11) NOT NULL,
-	CUST_NUM VARCHAR(10) NOT NULL,
+	CUST_NUM VARCHAR(10) NOT NULL
 	PRIMARY KEY(SVC_MGMT_NUM));
 	 */
 	
@@ -42,7 +42,5 @@ public class SvcInfo {
 	public void setCustNum(String custNum) {
 		this.custNum = custNum;
 	}
-	
-	
 
 }

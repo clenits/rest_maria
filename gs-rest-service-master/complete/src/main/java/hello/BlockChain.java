@@ -7,6 +7,7 @@ public class BlockChain {
 	PWD VARCHAR(64) NOT NULL,
 	SVC_MGMT_NUM VARCHAR(10) NOT NULL,
 	CUST_NUM VARCHAR(10) NOT NULL,
+	UUID VARCHAR() NOT NULL,
 	LAST_LOGON_DTM VARCHAR(12) ,
 	FST_CRE_DTM VARCHAR(12),
 	LAST_UPD_DTM VARCHAR(12),
@@ -14,11 +15,12 @@ public class BlockChain {
 	);
 	 */
 	
-	public BlockChain(String blckCustNum, String pwd, String svcMgmtNum , String custNum, String lastLogonDt, String fstCreDtm,String lastUpdDtm ){
+	public BlockChain(String blckCustNum, String pwd, String svcMgmtNum , String custNum, String uuid, String lastLogonDt, String fstCreDtm,String lastUpdDtm ){
 		this.blckCustNum = blckCustNum;
 		this.pwd = pwd;
 		this.svcMgmtNum = svcMgmtNum;
 		this.custNum = custNum;
+		this.uuid = uuid;
 		this.lastLogonDt =lastLogonDt;
 		this.fstCreDtm =fstCreDtm; 
 		this.lastUpdDtm = lastUpdDtm;
@@ -28,6 +30,7 @@ public class BlockChain {
     private final String pwd;
     private final String svcMgmtNum;
     private final String custNum;
+    private final String uuid;
     private final String lastLogonDt;
     private final String fstCreDtm;
     private final String lastUpdDtm;
@@ -43,6 +46,9 @@ public class BlockChain {
 	}
 	public String getCustNum() {
 		return custNum;
+	}
+	public String getUuid() {
+		return uuid;
 	}
 	public String getLastLogonDt() {
 		return lastLogonDt;

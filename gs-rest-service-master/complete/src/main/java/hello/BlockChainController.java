@@ -8,69 +8,88 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BlockChainController {
 	
-	@RequestMapping("/auth")
-	public BlockChainReturnParam auth(@RequestParam(value="blckChnId", defaultValue="01063294236@kr") String blckChnId,
-			@RequestParam(value="pwd", defaultValue="pwd") String pwd) {
+	@RequestMapping("/check")	// 회원가입여부 체크 
+	public String regCheck(@RequestParam(value="uuid", defaultValue="") String uuid){
+
+		SvcInfo svcInfo = null;
+		
+		BlockChainDAO blockChainDAO = new BlockChainDAO();
+		
+		BlockChain blckChn = blockChainDAO.CheckBlckChainMbrInfo(uuid);
+		
+		BlockChainReturnParam blockChainReturnParam = new BlockChainReturnParam() ;
+		
+		if( blckChn == null ){
+			// 회선이 존재하지 않습니다.
+			blockChainReturnParam.setReturnCode("Y");
+		} else {
+			blockChainReturnParam.setReturnCode("N");
+		}
+		
+		return blockChainReturnParam;
+	}
+	
+	@RequestMapping("/signup")		// 회원가입 처리 
+	public CustInfo custInfo(@RequestParam(value="blckChnId", defaultValue="01063294236@kr") String blckChnId,
+			@RequestParam(value="pwd", defaultValue="") String pwd,
+			@RequestParam(value="uuid", defaultValue="") String uuid){
 		
 		String svcNum = blckChnId.split("@")[0];
 		
 		BlockChainDAO blockChainDAO = new BlockChainDAO();
 		
-		BlockChain blckChn = blockChainDAO.SelectBlckChnMbrInfo(svcNum);
-		
 		BlockChainReturnParam blockChainReturnParam = new BlockChainReturnParam() ;
-		// 블럭체인정보 존재 여부 확인
-		if(blckChn != null ){
-			// 패스워드 일치 여부 확인
-			if(pwd.equals(blckChn.getPwd() )){
-				blockChainReturnParam.setReturnCode("1001");
-				blockChainReturnParam.setBlckCustNum(blckChn.getBlckCustNum());
-			}else{
-				blockChainReturnParam.setReturnCode("2001");
-			}
+		
+		SvcInfo svcInfo = blockChainDAO.SelectSvcInfo(svcNum);
+		
+		if( svcInfo == null ){
+			// 회선이 존재하지 않습니다.
+			blockChainReturnParam.setReturnCode("1002");
 		}else{
-			SvcInfo svcInfo = blockChainDAO.SelectSvcInfo(svcNum);
+			long blckChnCustNum = blockChainDAO.SelectNextBlckCustNum();
 			
-			if( svcInfo == null ){
-				// 회선이 존재하지 않습니다.
-				blockChainReturnParam.setReturnCode("3001");
+			BlockChain blckchnForInsert = new BlockChain(String.valueOf(blckChnCustNum),
+					pwd,
+					svcInfo.getSvcMgmtNum(),
+					svcInfo.getCustNum(),
+					uuid,
+					"",
+					"",
+					"");
+			
+			boolean result = blockChainDAO.InsertBlckChnMbrInfo(blckchnForInsert);
+			
+			if(result){
+				blockChainReturnParam.setReturnCode("1001");
+				blockChainReturnParam.setBlckCustNum(String.valueOf(blckChnCustNum));
 			}else{
-				// 신규 회원 가입
-				long blckChnCustNum = blockChainDAO.SelectNextBlckCustNum();
-				
-				BlockChain blckchnForInsert = new BlockChain(String.valueOf(blckChnCustNum),
-						pwd,
-						svcInfo.getSvcMgmtNum(),
-						svcInfo.getCustNum(),
-						"",
-						"",
-						"");
-				
-				
-				
-				boolean result = blockChainDAO.InsertBlckChnMbrInfo(blckchnForInsert);
-				
-				if(result){
-					blockChainReturnParam.setReturnCode("1002");
-					blockChainReturnParam.setBlckCustNum(String.valueOf(blckChnCustNum));
-				}else{
-					blockChainReturnParam.setReturnCode("4001");
-				}
-				
+				blockChainReturnParam.setReturnCode("1003");
 			}
 		}
 		
-        return blockChainReturnParam;
-    }
+		return blockChainReturnParam;
+	}
 	
-	@RequestMapping("/custInfo")
-	public CustInfo custInfo(@RequestParam(value="blckCustNum", defaultValue="") String blckCustNum){
-		CustInfo custInfo = null;
+	@RequestMapping("/login")	// 로그인 처리
+	public CustInfo custInfo(@RequestParam(value="uuid", defaultValue="") String uuid,
+			@RequestParam(value="pwd", defaultValue="") String pwd){
 		
 		BlockChainDAO blockChainDAO = new BlockChainDAO();
 		
-		custInfo = blockChainDAO.SelectCustInfo(blckCustNum);
+		BlockChain blckChn = blockChainDAO.SelectBlckChnMbrInfo(uuid, pwd);
 		
-		return custInfo;
+		BlockChainReturnParam blockChainReturnParam = new BlockChainReturnParam() ;
+		
+		// 블럭체인정보 존재 여부 확인
+		if(blckChn != null ){
+			blockChainReturnParam.setReturnCode("2001");
+			blockChainReturnParam.setBlckCustNum(blckChn.getBlckCustNum());	// 블록체인 고객번호 
+		}else{
+			blockChainReturnParam.setReturnCode("2002");
+		}
+		
+		return blockChainReturnParam;
 	}
+	
+	
 }

@@ -15,7 +15,7 @@ public class BlockChainDAO {
 	String id = "root";
 	String pw = "haha1027!";
 
-	public BlockChain SelectBlckChnMbrInfo(String svcNum){
+	public BlockChain SelectBlckChnMbrInfo(String uuid, String pwd){
 		ResultSet resultSet = null;
 		Statement statement = null;
 		BlockChain blockChain = null;
@@ -25,12 +25,14 @@ public class BlockChainDAO {
 				+ "BLCK.PWD ,"
 				+ "BLCK.SVC_MGMT_NUM ,"
 				+ "BLCK.CUST_NUM ,"
+				+ "BLCK.UUID ,"
 				+ "BLCK.LAST_LOGON_DTM ,"
 				+ "BLCK.FST_CRE_DTM ,"
 				+ "BLCK.LAST_UPD_DTM  "
 				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC "
 				+ "WHERE BLCK.SVC_MGMT_NUM = SVC.SVC_MGMT_NUM "
-				+ "AND SVC.SVC_NUM = " + svcNum;
+				+ "AND BLCK.UUID = " + uuid
+				+ "AND BLCK.PWD = " + pwd;
 		
 		try{
 			Class.forName(driver);
@@ -43,6 +45,7 @@ public class BlockChainDAO {
 						resultSet.getString("PWD"),
 						resultSet.getString("SVC_MGMT_NUM"),
 						resultSet.getString("CUST_NUM"),
+						resultSet.getString("UUID"),
 						resultSet.getString("LAST_LOGON_DTM"),
 						resultSet.getString("FST_CRE_DTM"),
 						resultSet.getString("LAST_UPD_DTM"));
@@ -65,6 +68,58 @@ public class BlockChainDAO {
 		
 	}
 	
+	public BlockChain CheckBlckChainMbrInfo(String uuid){
+		SvcInfo svcInfo = null;
+		
+		ResultSet resultSet = null;
+		Statement statement = null;
+		
+		String query = "SELECT "
+				+ " BLCK.BLCK_CUST_NUM ,"
+				+ "BLCK.PWD ,"
+				+ "BLCK.SVC_MGMT_NUM ,"
+				+ "BLCK.CUST_NUM ,"
+				+ "BLCK.UUID ,"
+				+ "BLCK.LAST_LOGON_DTM ,"
+				+ "BLCK.FST_CRE_DTM ,"
+				+ "BLCK.LAST_UPD_DTM "
+				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC "
+				+ "WHERE BLCK.SVC_MGMT_NUM = SVC.SVC_MGMT_NUM "
+				+ "AND BLCK.UUID = " + uuid;
+		
+		try{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, id, pw);
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+			
+			while(resultSet.next()){
+				blockChain = new BlockChain(resultSet.getString("BLCK_CUST_NUM"),
+						resultSet.getString("PWD"),
+						resultSet.getString("SVC_MGMT_NUM"),
+						resultSet.getString("CUST_NUM"),
+						resultSet.getString("UUID"),
+						resultSet.getString("LAST_LOGON_DTM"),
+						resultSet.getString("FST_CRE_DTM"),
+						resultSet.getString("LAST_UPD_DTM"));
+			}
+			
+		}catch(Exception e){
+			System.out.println(e);
+		}finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(statement != null) statement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+		
+		return blockChain;
+		
+	}
+		
 	public SvcInfo SelectSvcInfo(String svcNum){
 		SvcInfo svcInfo = null;
 		
@@ -74,7 +129,7 @@ public class BlockChainDAO {
 		String query = "SELECT "
 				+ "SVC.SVC_MGMT_NUM ,"
 				+ "SVC.SVC_NUM ,"
-				+ "SVC.CUST_NUM "
+				+ "SVC.CUST_NUM"
 				+ "FROM SVC_INFO SVC "
 				+ "WHERE SVC.SVC_NUM = " + svcNum;
 		try{
@@ -84,11 +139,12 @@ public class BlockChainDAO {
 			resultSet = statement.executeQuery(query);
 			
 			while(resultSet.next()){
-				svcInfo = new SvcInfo(resultSet.getString("SVC_MGMT_NUM"),
+				svcInfo = new SvcInfo(
+						resultSet.getString("SVC_MGMT_NUM"),
 						resultSet.getString("SVC_NUM"),
-						resultSet.getString("CUST_NUM"));
+						resultSet.getString("CUST_NUM")
+						);
 			}
-
 			
 		}catch(Exception e){
 			System.out.println(e);
@@ -147,6 +203,7 @@ public class BlockChainDAO {
 				+ " PWD,"
 				+ " SVC_MGMT_NUM,"
 				+ " CUST_NUM,"
+				+ " UUID,"
 				+ " LAST_LOGON_DTM,"
 				+ " FST_CRE_DTM,"
 				+ " LAST_UPD_DTM ) "
@@ -158,6 +215,8 @@ public class BlockChainDAO {
 				+ blckchn.getSvcMgmtNum()
 				+ ","
 				+ blckchn.getCustNum()
+				+ ","
+				+ blckchn.getUuid()
 				+ ",DATE_FORMAT(NOW(),'%Y%m%d%h%i')"
 				+ ",DATE_FORMAT(NOW(),'%Y%m%d%h%i')"
 				+ ",DATE_FORMAT(NOW(),'%Y%m%d%h%i')"
@@ -186,44 +245,7 @@ public class BlockChainDAO {
 		}
 		
 	}
-	
-	public CustInfo SelectCustInfo(String blckCustNum){
-		CustInfo custInfo = null;
-		ResultSet resultSet = null;
-		Statement statement = null;
-		String query = " SELECT CUST.CUST_NM, CUST.SSN_SEX_CD, CUST.SSN_BIRTH_DT "
-				+ "FROM CUST_INFO CUST,  BLCK_CHN_MBR_INFO BLCK "
-				+ "WHERE CUST.CUST_NUM = BLCK.CUST_NUM "
-				+ "AND BLCK.BLCK_CUST_NUM = " + blckCustNum;
 		
-		try{
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, id, pw);
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(query);
-			
-			while(resultSet.next()){
-				custInfo = new CustInfo(resultSet.getString("CUST_NM"),
-						resultSet.getString("SSN_BIRTH_DT"),
-						resultSet.getString("SSN_SEX_CD") );
-			}
-
-			
-		}catch(Exception e){
-			System.out.println(e);
-		}finally {
-			try {
-				if(resultSet != null) resultSet.close();
-				if(statement != null) statement.close();
-				if(connection != null) connection.close();
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-		}
-		
-		return custInfo;
-	}
-	
 	/*
 	CREATE TABLE BLCK_CHN_MBR_INFO (
 	BLCK_CUST_NUM VARCHAR(20) NOT NULL,
