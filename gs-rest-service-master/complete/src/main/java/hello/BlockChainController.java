@@ -9,8 +9,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.net.ssl.HttpsURLConnection;
-
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -102,15 +104,16 @@ public class BlockChainController {
 	}
 	
 	@RequestMapping("/query") // 잔액조회
-	public ChainCodeReturnParam query( @RequestParam(value="blckChnId", defaultValue="") String blckChnId  ) {
+	public ChainCodeReturnParam query( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum  ) {
 		
 		String USER_AGENT = "Mozilla/5.0";
+		
 		ChainCodeReturnParam chainCodeReturnParam = null;
 		
 		String url = "http://blockchain.skcc.com:4000/query";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
 		String chaincodeId = "buypass";
-		String args = blckChnId;
+		String args = blckCustNum;
 		
 		try {
 			URL obj = new URL(url);
@@ -147,10 +150,29 @@ public class BlockChainController {
 			//print result
 			System.out.println(response.toString());
 			
+			JSONParser jsonParser = new JSONParser();
+			
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(response.toString());
+			System.out.println("jsonObject = " + jsonObject);
+			JSONArray returnMsg =  (JSONArray) jsonObject.get("msg");
+			System.out.println("returnMsg = " + returnMsg);
+			System.out.println("returnMsg.get(0) = " + returnMsg.get(0));
+			//JSONObject blockChainAccount = (JSONObject)returnMsg.get(0);
+			
+			JSONObject blockChainAccount = (JSONObject) jsonParser.parse( returnMsg.get(0).toString() );
+			
+			chainCodeReturnParam = new ChainCodeReturnParam(
+															blockChainAccount.get("BlckCustNum").toString()
+															, blockChainAccount.get("Balance").toString()
+															,"0");
+			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
