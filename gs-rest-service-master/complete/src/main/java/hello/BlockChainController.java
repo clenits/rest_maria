@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BlockChainController {
 	
 	@RequestMapping("/check")	// 회원가입여부 체크 
-	public String regCheck(@RequestParam(value="uuid", defaultValue="") String uuid){
+	public BlockChainReturnParam regCheck(@RequestParam(value="uuid", defaultValue="") String uuid){
 
 		SvcInfo svcInfo = null;
 		
@@ -30,7 +30,7 @@ public class BlockChainController {
 	}
 	
 	@RequestMapping("/signup")		// 회원가입 처리 
-	public CustInfo custInfo(@RequestParam(value="blckChnId", defaultValue="01063294236@kr") String blckChnId,
+	public BlockChainReturnParam custInfo(@RequestParam(value="blckChnId", defaultValue="01063294236@kr") String blckChnId,
 			@RequestParam(value="pwd", defaultValue="") String pwd,
 			@RequestParam(value="uuid", defaultValue="") String uuid){
 		
@@ -71,7 +71,7 @@ public class BlockChainController {
 	}
 	
 	@RequestMapping("/login")	// 로그인 처리
-	public CustInfo custInfo(@RequestParam(value="uuid", defaultValue="") String uuid,
+	public BlockChainReturnParam custInfo(@RequestParam(value="uuid", defaultValue="") String uuid,
 			@RequestParam(value="pwd", defaultValue="") String pwd){
 		
 		BlockChainDAO blockChainDAO = new BlockChainDAO();
@@ -90,6 +90,5 @@ public class BlockChainController {
 		
 		return blockChainReturnParam;
 	}
-	
 	
 }

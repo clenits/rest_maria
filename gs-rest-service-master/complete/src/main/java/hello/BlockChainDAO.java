@@ -73,6 +73,7 @@ public class BlockChainDAO {
 		
 		ResultSet resultSet = null;
 		Statement statement = null;
+		BlockChain blockChain = null;
 		
 		String query = "SELECT "
 				+ " BLCK.BLCK_CUST_NUM ,"
