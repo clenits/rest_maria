@@ -1,5 +1,6 @@
 hello\BlockChainController.class
 hello\BlockChainDAO.class
+hello\ChainCodeReturnParam.class
 hello\GreetingController.class
 hello\SvcInfo.class
 hello\BlockChain.class
