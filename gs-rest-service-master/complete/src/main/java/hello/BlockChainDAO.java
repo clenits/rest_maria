@@ -31,7 +31,7 @@ public class BlockChainDAO {
 				+ "BLCK.LAST_UPD_DTM  "
 				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC "
 				+ "WHERE BLCK.SVC_MGMT_NUM = SVC.SVC_MGMT_NUM "
-				+ "AND BLCK.UUID = " + uuid
+				+ "AND BLCK.UUID = " + '"' + uuid + '"'
 				+ "AND BLCK.PWD = " + pwd;
 		
 		try{
@@ -86,7 +86,7 @@ public class BlockChainDAO {
 				+ "BLCK.LAST_UPD_DTM "
 				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC "
 				+ "WHERE BLCK.SVC_MGMT_NUM = SVC.SVC_MGMT_NUM "
-				+ "AND BLCK.UUID = " + uuid;
+				+ "AND BLCK.UUID = "+ '"' + uuid + '"';
 		
 		try{
 			Class.forName(driver);
@@ -130,9 +130,9 @@ public class BlockChainDAO {
 		String query = "SELECT "
 				+ "SVC.SVC_MGMT_NUM ,"
 				+ "SVC.SVC_NUM ,"
-				+ "SVC.CUST_NUM"
+				+ "SVC.CUST_NUM "
 				+ "FROM SVC_INFO SVC "
-				+ "WHERE SVC.SVC_NUM = " + svcNum;
+				+ "WHERE SVC.SVC_NUM = "+'"' + svcNum + '"';
 		try{
 			Class.forName(driver);
 			connection = DriverManager.getConnection(url, id, pw);
@@ -254,7 +254,7 @@ public class BlockChainDAO {
 		BlockChain blockChain = null;
 		String query = "SELECT BLCK.BLCK_CUST_NUM  "
 				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC "
-				+ "WHERE SVC.SVC_NUM = " + svcNum
+				+ "WHERE SVC.SVC_NUM = " +'"'+ svcNum +'"'
 				+ " AND BLCK.SVC_MGMT_NUM = SVC.SVC_MGMT_NUM ";
 		try{
 			Class.forName(driver);
