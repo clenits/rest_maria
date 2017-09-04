@@ -217,7 +217,9 @@ public class BlockChainDAO {
 				+ ","
 				+ blckchn.getCustNum()
 				+ ","
+				+ '"'
 				+ blckchn.getUuid()
+				+ '"'
 				+ ",DATE_FORMAT(NOW(),'%Y%m%d%h%i')"
 				+ ",DATE_FORMAT(NOW(),'%Y%m%d%h%i')"
 				+ ",DATE_FORMAT(NOW(),'%Y%m%d%h%i')"
