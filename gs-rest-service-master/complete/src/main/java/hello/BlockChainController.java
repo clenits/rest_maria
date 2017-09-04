@@ -112,7 +112,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/query";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypass";
+		String chaincodeId = "buypassV3";
 		String args = blckCustNum;
 		
 		try {
@@ -182,7 +182,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/invoke";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypass";
+		String chaincodeId = "buypassV3";
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
@@ -258,7 +258,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/invoke";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypass";
+		String chaincodeId = "buypassV3";
 		
 		BlockChainDAO bcDao = new BlockChainDAO();
 		
@@ -329,6 +329,79 @@ public class BlockChainController {
 		}
 	
 		return chainCodeReturnParam;
+	}
+	
+	@RequestMapping("/hist") // 이력조회
+	public BuypassStruct hist( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum  ) {
+		
+		String USER_AGENT = "Mozilla/5.0";
+		
+		BuypassStruct buypassStruct = null;
+		
+		String url = "http://blockchain.skcc.com:4000/query";
+		String targetPeers = "{\"org1\":[\"peer1\"]}";
+		String chaincodeId = "buypassV3";
+		String args = blckCustNum;
+		
+		try {
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
+			con.setRequestMethod("POST");
+			con.setRequestProperty("User-Agent", USER_AGENT);
+			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			
+			String urlParameters = "fcn=hist&args=" + args + "&chainCodeId=" + chaincodeId + "&targetPeers=" + targetPeers;
+			
+			con.setDoOutput(true);
+			DataOutputStream  wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+			
+			int responseCode = con.getResponseCode();
+			
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Post parameters : " + urlParameters);
+			System.out.println("Response Code : " + responseCode);
+
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+
+			JSONParser jsonParser = new JSONParser();
+			
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(response.toString());
+			JSONArray returnMsg =  (JSONArray) jsonObject.get("msg");
+			
+			JSONObject blockChainAccountHist = (JSONObject) jsonParser.parse( returnMsg.get(0).toString() );
+			
+			buypassStruct = new BuypassStruct(
+					blockChainAccountHist.get("BlckCustNum").toString()
+					, blockChainAccountHist.get("Balance").toString()
+					, blockChainAccountHist.get("Sender").toString()
+					, blockChainAccountHist.get("Receiver").toString()
+					, blockChainAccountHist.get("Amount").toString()
+					, blockChainAccountHist.get("Event_dtm").toString() );
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return buypassStruct;
 	}
 	
 }
