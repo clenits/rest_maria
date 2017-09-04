@@ -244,7 +244,7 @@ public class BlockChainController {
 		return chainCodeReturnParam;
 	}
 	
-	@RequestMapping("/transfet") // 송금
+	@RequestMapping("/transfer") // 송금
 	public ChainCodeReturnParam transfet( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
                                           @RequestParam(value="amount", defaultValue="") String amount ,
                                           @RequestParam(value="svcNum", defaultValue="") String svcNum ) {
@@ -259,6 +259,10 @@ public class BlockChainController {
 		BlockChainDAO bcDao = new BlockChainDAO();
 		
 		BlockChain blockChain = bcDao.selectBlckCustNumBySvcNum(svcNum);
+		
+		if(blockChain == null) {
+			return new ChainCodeReturnParam("", "", "-1");
+		}
 		
 		String args = blckCustNum + " " + amount + " " + blockChain.getBlckCustNum();
 		

@@ -254,7 +254,8 @@ public class BlockChainDAO {
 		BlockChain blockChain = null;
 		String query = "SELECT BLCK.BLCK_CUST_NUM  "
 				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC "
-				+ "WHERE SVC.SVC_NUM = " + svcNum;
+				+ "WHERE SVC.SVC_NUM = " + svcNum
+				+ " AND BLCK.SVC_MGMT_NUM = SVC.SVC_MGMT_NUM ";
 		try{
 			Class.forName(driver);
 			connection = DriverManager.getConnection(url, id, pw);
