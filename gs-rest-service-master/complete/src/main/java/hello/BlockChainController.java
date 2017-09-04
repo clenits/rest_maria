@@ -24,8 +24,6 @@ public class BlockChainController {
 	
 	@RequestMapping("/check")	// 회원가입여부 체크 
 	public BlockChainReturnParam regCheck(@RequestParam(value="uuid", defaultValue="") String uuid){
-
-		SvcInfo svcInfo = null;
 		
 		BlockChainDAO blockChainDAO = new BlockChainDAO();
 		
@@ -35,9 +33,9 @@ public class BlockChainController {
 		
 		if( blckChn == null ){
 			// 회선이 존재하지 않습니다.
-			blockChainReturnParam.setReturnCode("Y");
-		} else {
 			blockChainReturnParam.setReturnCode("N");
+		} else {
+			blockChainReturnParam.setReturnCode("Y");
 		}
 		
 		return blockChainReturnParam;
