@@ -1,10 +1,13 @@
 package hello;
 
+import java.util.List;
+
 public class ChainCodeReturnParam {
 
 	private String blckCustNum = "";
 	private String balance = "";
 	private String returnCode = "";
+	private List<BuypassStruct> hist = null;
 	
 	ChainCodeReturnParam(String blckCustNum, String balance, String returnCode  ){
 		this.blckCustNum = blckCustNum;

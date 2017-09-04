@@ -147,17 +147,10 @@ public class BlockChainController {
 			}
 			in.close();
 
-			//print result
-			System.out.println(response.toString());
-			
 			JSONParser jsonParser = new JSONParser();
 			
 			JSONObject jsonObject = (JSONObject) jsonParser.parse(response.toString());
-			System.out.println("jsonObject = " + jsonObject);
 			JSONArray returnMsg =  (JSONArray) jsonObject.get("msg");
-			System.out.println("returnMsg = " + returnMsg);
-			System.out.println("returnMsg.get(0) = " + returnMsg.get(0));
-			//JSONObject blockChainAccount = (JSONObject)returnMsg.get(0);
 			
 			JSONObject blockChainAccount = (JSONObject) jsonParser.parse( returnMsg.get(0).toString() );
 			
@@ -180,4 +173,150 @@ public class BlockChainController {
 		return chainCodeReturnParam;
 	}
 	
+	@RequestMapping("/deposit") // 입금
+	public ChainCodeReturnParam deposit( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
+			                             @RequestParam(value="amount", defaultValue="") String amount ) {
+		String USER_AGENT = "Mozilla/5.0";
+		
+		ChainCodeReturnParam chainCodeReturnParam = null;
+		
+		String url = "http://blockchain.skcc.com:4000/invoke";
+		String targetPeers = "{\"org1\":[\"peer1\"]}";
+		String chaincodeId = "buypass";
+		
+		String args = blckCustNum + " " + amount;
+		
+		try {
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
+			con.setRequestMethod("POST");
+			con.setRequestProperty("User-Agent", USER_AGENT);
+			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			
+			String urlParameters = "fcn=deposit&args=" + args + "&chainCodeId=" + chaincodeId + "&targetPeers=" + targetPeers;
+			
+			con.setDoOutput(true);
+			DataOutputStream  wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+			
+			int responseCode = con.getResponseCode();
+			
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Post parameters : " + urlParameters);
+			System.out.println("Response Code : " + responseCode);
+
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+
+			JSONParser jsonParser = new JSONParser();
+			
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(response.toString());
+
+			String returnTx =  (String) jsonObject.get("msg");
+			
+			if(returnTx.startsWith("TX_ID")) {
+				chainCodeReturnParam = new ChainCodeReturnParam("", "", "0");
+			}else {
+				chainCodeReturnParam = new ChainCodeReturnParam("", "", "-1");
+			}
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return chainCodeReturnParam;
+	}
+	
+	@RequestMapping("/transfet") // 송금
+	public ChainCodeReturnParam transfet( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
+                                          @RequestParam(value="amount", defaultValue="") String amount ,
+                                          @RequestParam(value="svcNum", defaultValue="") String svcNum ) {
+		String USER_AGENT = "Mozilla/5.0";
+		
+		ChainCodeReturnParam chainCodeReturnParam = null;
+		
+		String url = "http://blockchain.skcc.com:4000/invoke";
+		String targetPeers = "{\"org1\":[\"peer1\"]}";
+		String chaincodeId = "buypass";
+		
+		BlockChainDAO bcDao = new BlockChainDAO();
+		
+		BlockChain blockChain = bcDao.selectBlckCustNumBySvcNum(svcNum);
+		
+		String args = blckCustNum + " " + amount + " " + blockChain.getBlckCustNum();
+		
+		try {
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
+			con.setRequestMethod("POST");
+			con.setRequestProperty("User-Agent", USER_AGENT);
+			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			
+			String urlParameters = "fcn=transfer&args=" + args + "&chainCodeId=" + chaincodeId + "&targetPeers=" + targetPeers;
+			
+			con.setDoOutput(true);
+			DataOutputStream  wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+			
+			int responseCode = con.getResponseCode();
+			
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Post parameters : " + urlParameters);
+			System.out.println("Response Code : " + responseCode);
+
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+
+			JSONParser jsonParser = new JSONParser();
+			
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(response.toString());
+
+			String returnTx =  (String) jsonObject.get("msg");
+			
+			if(returnTx.startsWith("TX_ID")) {
+				chainCodeReturnParam = new ChainCodeReturnParam("", "", "0");
+			}else {
+				chainCodeReturnParam = new ChainCodeReturnParam("", "", "-1");
+			}
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		return chainCodeReturnParam;
+	}
 }

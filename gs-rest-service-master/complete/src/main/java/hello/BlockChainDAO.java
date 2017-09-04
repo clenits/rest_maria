@@ -246,6 +246,48 @@ public class BlockChainDAO {
 		}
 		
 	}
+	
+	public BlockChain selectBlckCustNumBySvcNum( String svcNum ){
+		
+		ResultSet resultSet = null;
+		Statement statement = null;
+		BlockChain blockChain = null;
+		String query = "SELECT BLCK.BLCK_CUST_NUM  "
+				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC "
+				+ "WHERE SVC.SVC_NUM = " + svcNum;
+		try{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, id, pw);
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+			
+			while(resultSet.next()){
+				blockChain = new BlockChain(
+						resultSet.getString("BLCK_CUST_NUM")
+						,""
+						,""
+						,""
+						,""
+						,""
+						,""
+						,""
+						);
+			}
+			
+		}catch(Exception e){
+			System.out.println(e);
+		}finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(statement != null) statement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+		return blockChain;
+		
+	}
 		
 	/*
 	CREATE TABLE BLCK_CHN_MBR_INFO (
