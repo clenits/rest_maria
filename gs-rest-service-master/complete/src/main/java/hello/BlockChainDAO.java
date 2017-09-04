@@ -13,7 +13,7 @@ public class BlockChainDAO {
 	String driver = "org.mariadb.jdbc.Driver";
 	String url = "jdbc:mariadb://127.0.0.1:3306/mysql";
 	String id = "root";
-	String pw = "haha1027!";
+	String pw = "test1234";
 
 	public BlockChain SelectBlckChnMbrInfo(String uuid, String pwd){
 		ResultSet resultSet = null;
