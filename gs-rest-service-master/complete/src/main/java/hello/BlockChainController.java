@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -184,7 +186,11 @@ public class BlockChainController {
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
 		String chaincodeId = "buypass";
 		
-		String args = blckCustNum + " " + amount;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date = new Date();
+		
+		String args = blckCustNum + " " + amount + " " + sdf.format(date);
+			
 		
 		try {
 			URL obj = new URL(url);
@@ -264,7 +270,10 @@ public class BlockChainController {
 			return new ChainCodeReturnParam("", "", "-1");
 		}
 		
-		String args = blckCustNum + " " + amount + " " + blockChain.getBlckCustNum();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date = new Date();
+		
+		String args = blckCustNum + " " + amount + " " + blockChain.getBlckCustNum() + " " + sdf.format(date);;
 		
 		try {
 			URL obj = new URL(url);
