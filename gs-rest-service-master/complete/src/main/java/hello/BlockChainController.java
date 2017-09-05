@@ -332,11 +332,11 @@ public class BlockChainController {
 	}
 	
 	@RequestMapping("/hist") // 이력조회
-	public BuypassStruct hist( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum  ) {
+	public BuypassStruct[] hist( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum  ) {
 		
 		String USER_AGENT = "Mozilla/5.0";
 		
-		BuypassStruct buypassStruct = null;
+		BuypassStruct[] buypassStructArray = null;
 		
 		String url = "http://blockchain.skcc.com:4000/query";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
@@ -378,17 +378,35 @@ public class BlockChainController {
 			JSONParser jsonParser = new JSONParser();
 			
 			JSONObject jsonObject = (JSONObject) jsonParser.parse(response.toString());
-			JSONArray returnMsg =  (JSONArray) jsonObject.get("msg");
+			System.out.println("jsonObject = " + jsonObject);
 			
-			JSONObject blockChainAccountHist = (JSONObject) jsonParser.parse( returnMsg.get(0).toString() );
+			JSONArray msgJSONArray = (JSONArray) jsonObject.get("msg");
+			System.out.println("msgJSONArray = " + msgJSONArray);
 			
-			buypassStruct = new BuypassStruct(
-					blockChainAccountHist.get("BlckCustNum").toString()
-					, blockChainAccountHist.get("Balance").toString()
-					, blockChainAccountHist.get("Sender").toString()
-					, blockChainAccountHist.get("Receiver").toString()
-					, blockChainAccountHist.get("Amount").toString()
-					, blockChainAccountHist.get("Event_dtm").toString() );
+			JSONObject returnMsg = (JSONObject) jsonParser.parse( msgJSONArray.get(0).toString() );
+			System.out.println("returnMsg = " + returnMsg);
+			
+			
+			JSONArray histJSONArray = (JSONArray) returnMsg.get("AccountHist");
+			System.out.println("histJSONArray = " + histJSONArray);
+			
+			buypassStructArray = new BuypassStruct[histJSONArray.size()];
+			
+			for ( int i = 0 ; i < histJSONArray.size() ; i ++ ) {
+				
+				JSONObject blockChainAccountHist = (JSONObject) jsonParser.parse( histJSONArray.get(i).toString() );
+				
+				BuypassStruct buypassStruct = new BuypassStruct(
+						blockChainAccountHist.get("BlckCustNum").toString()
+						, blockChainAccountHist.get("Balance").toString()
+						, blockChainAccountHist.get("Sender").toString()
+						, blockChainAccountHist.get("Receiver").toString()
+						, blockChainAccountHist.get("Amount").toString()
+						, blockChainAccountHist.get("Event_dtm").toString() );
+				
+				buypassStructArray[i] = buypassStruct;
+			}
+			
 			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -401,7 +419,7 @@ public class BlockChainController {
 			e.printStackTrace();
 		}
 		
-		return buypassStruct;
+		return buypassStructArray;
 	}
 	
 }
