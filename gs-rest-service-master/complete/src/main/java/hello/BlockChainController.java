@@ -74,10 +74,15 @@ public class BlockChainController {
 			if(result){
 				blockChainReturnParam.setReturnCode("1001");
 				blockChainReturnParam.setBlckCustNum(String.valueOf(blckChnCustNum));
+				// Legacy 계정 초기화
+				initAccount(String.valueOf(blckChnCustNum));
 			}else{
 				blockChainReturnParam.setReturnCode("1003");
 			}
+			
 		}
+		
+		
 		
 		return blockChainReturnParam;
 	}
@@ -422,4 +427,106 @@ public class BlockChainController {
 		return buypassStructArray;
 	}
 	
+	@RequestMapping("/changeInto") // 블록체인 포인트로 환전
+	public ChainCodeReturnParam change( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
+                                          @RequestParam(value="amount", defaultValue="") String amount ,
+                                          @RequestParam(value="accountCd", defaultValue="") String accountCd,
+                                          @RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd  ) {
+		ChainCodeReturnParam chainCodeReturnParam = null;
+		LegacyAccountDao laDao = new LegacyAccountDao();
+		
+		LegacyAccount la = new LegacyAccount(blckCustNum, amount,"1.0",accountCd , accountDtlCd );
+		
+		String currentBalance = laDao.selectAccountBalance(la);
+		String tobeBalance = "";
+		
+		if(accountCd.equals("bank")) {
+			//은행 출금
+			
+			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) - Integer.valueOf(amount) );
+			
+			la.setBalance(tobeBalance);
+			
+			if( laDao.updateBalace(la) ) {
+				deposit(blckCustNum,amount);
+			}
+			
+		}else if(accountCd.equals("eCash")){
+			
+			la.setTransferRate("0.9");
+			
+			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) - Integer.valueOf(amount) );
+			
+			la.setBalance(tobeBalance);
+			
+			String tobeAmount = String.valueOf( Integer.valueOf(amount) * 0.9 );
+			
+			if( laDao.updateBalace(la) ) {
+				deposit(blckCustNum,tobeAmount);
+			}
+			
+		}else {
+			chainCodeReturnParam = new ChainCodeReturnParam("","","Wrong AccountCd");
+		}
+		
+		
+	
+		return chainCodeReturnParam;
+	}
+	
+	
+	private boolean initAccount(String blckChnCustNum) {
+		
+		LegacyAccountDao laDao = new LegacyAccountDao();
+		
+		LegacyAccount la = new LegacyAccount(blckChnCustNum,"1000000","1.0","bank","01");
+		// 은핸 계좌 초기화
+		if( laDao.deposit(la) ) {
+			la.setAccountDtlCd("02");
+			laDao.deposit(la);
+			la.setAccountDtlCd("03");
+			laDao.deposit(la);
+			la.setAccountDtlCd("04");
+			laDao.deposit(la);
+		}
+		
+		
+		// eCash 초기화
+		la.setAccountCd("eCash");
+		la.setAccountDtlCd("01");
+		la.setBalance("110000");
+		la.setTransferRate("1.1");
+		
+		if ( laDao.deposit(la) ) {
+			la.setAccountDtlCd("02");
+			laDao.deposit(la);
+			la.setAccountDtlCd("03");
+			laDao.deposit(la);
+		}
+		
+		// point 초기화
+		la.setAccountCd("point");
+		la.setAccountDtlCd("01");
+		la.setBalance("500000");
+		la.setTransferRate("5");
+		if ( laDao.deposit(la) ) {
+			la.setAccountDtlCd("02");
+			laDao.deposit(la);
+			la.setAccountDtlCd("03");
+			laDao.deposit(la);
+		}
+		
+		//gameMoney 초기화
+		la.setAccountCd("gameMoney");
+		la.setAccountDtlCd("01");
+		la.setBalance("10000");
+		la.setTransferRate("0.1");
+		if ( laDao.deposit(la) ) {
+			la.setAccountDtlCd("02");
+			laDao.deposit(la);
+		}
+		
+		
+		return true;
+	}
 }

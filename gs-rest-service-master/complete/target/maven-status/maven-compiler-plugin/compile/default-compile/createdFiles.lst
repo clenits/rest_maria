@@ -1,10 +1,13 @@
-hello\BlockChainController.class
-hello\BlockChainDAO.class
 hello\ChainCodeReturnParam.class
-hello\GreetingController.class
 hello\SvcInfo.class
 hello\BlockChain.class
+hello\BuypassStruct.class
+hello\LegacyAccountDao.class
+hello\BlockChainController.class
+hello\BlockChainDAO.class
+hello\GreetingController.class
 hello\BlockChainReturnParam.class
+hello\LegacyAccount.class
 hello\Application.class
 hello\CustInfo.class
 hello\Greeting.class
