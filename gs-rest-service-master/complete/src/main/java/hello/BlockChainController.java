@@ -464,6 +464,8 @@ public class BlockChainController {
 			if( laDao.updateBalace(la) ) {
 				System.out.println("------------- changeInto BlockChain Account update -------------");
 				deposit(blckCustNum,amount,accountCd,accountDtlCd);
+			}else {
+				chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 			}
 			
 		}else if(accountCd.equals("eCash")){
@@ -479,6 +481,8 @@ public class BlockChainController {
 			if( laDao.updateBalace(la) ) {
 				System.out.println("------------- changeInto BlockChain Account update -------------");
 				deposit(blckCustNum,tobeAmount,accountCd,accountDtlCd);
+			}else {
+				chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 			}
 			
 		}else {
@@ -520,6 +524,8 @@ public class BlockChainController {
 			if( laDao.updateBalace(la) ) {
 				System.out.println("------------- changeFrom BlockChain Account update -------------");
 				deposit(blckCustNum,"-"+ amount,accountCd,accountDtlCd);
+			}else {
+				chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 			}
 			
 		}else if(accountCd.equals("eCash")){
@@ -535,6 +541,8 @@ public class BlockChainController {
 			if( laDao.updateBalace(la) ) {
 				System.out.println("------------- changeFrom BlockChain Account update -------------");
 				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
+			}else {
+				chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 			}
 			
 		}else if(accountCd.equals("point")){
@@ -550,6 +558,8 @@ public class BlockChainController {
 			if( laDao.updateBalace(la) ) {
 				System.out.println("------------- changeFrom BlockChain Account update -------------");
 				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
+			}else {
+				chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 			}
 			
 		}else if(accountCd.equals("gameMoney")){
@@ -564,6 +574,8 @@ public class BlockChainController {
 			if( laDao.updateBalace(la) ) {
 				System.out.println("------------- changeFrom BlockChain Account update -------------");
 				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
+			}else {
+				chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 			}
 		}else {
 			chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
