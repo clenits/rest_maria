@@ -562,6 +562,35 @@ public class BlockChainController {
 		
 	}
 	
+	@RequestMapping("/createLegacyAccount") 
+	private LegacyAccount createLegacyAccount(@RequestParam(value="blckCustNum", defaultValue="") String blckCustNum,
+			@RequestParam(value="accountCd", defaultValue="") String accountCd,
+			@RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd ) {
+		
+		LegacyAccountDao laDao = new LegacyAccountDao();
+		
+		LegacyAccount la = new LegacyAccount(blckCustNum,"1000000","1.0",accountCd,accountDtlCd);
+		
+		if (accountCd.equals("bank")) {
+			laDao.deposit(la);
+		}else if (accountCd.equals("eCash")) {
+			la.setBalance("100000");
+			la.setTransferRate("1.1");
+			laDao.deposit(la);
+		}else if (accountCd.equals("point")) {
+			la.setBalance("500000");
+			la.setTransferRate("5.0");
+			laDao.deposit(la);
+		}else if (accountCd.equals("gameMoney")) {
+			la.setBalance("10000");
+			la.setTransferRate("0.1");
+			laDao.deposit(la);
+		}
+		
+		return la;
+		
+	}
+	
 	@RequestMapping("/listLegacyAccount") 
 	private LegacyAccount[] listLegacyAccount(@RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ) {
 		
@@ -572,8 +601,6 @@ public class BlockChainController {
 		return laList;
 		
 	}
-	
-	
 	
 		
 	
