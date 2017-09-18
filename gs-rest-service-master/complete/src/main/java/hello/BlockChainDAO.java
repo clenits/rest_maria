@@ -308,7 +308,7 @@ public class BlockChainDAO {
 			resultSet = statement.executeQuery(query);
 			
 			while(resultSet.next()){
-				custNm = resultSet.getString("BLCK_CUST_NUM");
+				custNm = resultSet.getString("CUST_NM");
 			}
 			
 		}catch(Exception e){
@@ -342,7 +342,7 @@ public class BlockChainDAO {
 			resultSet = statement.executeQuery(query);
 			
 			while(resultSet.next()){
-				custNm = resultSet.getString("BLCK_CUST_NUM");
+				custNm = resultSet.getString("CUST_NM");
 			}
 			
 		}catch(Exception e){
