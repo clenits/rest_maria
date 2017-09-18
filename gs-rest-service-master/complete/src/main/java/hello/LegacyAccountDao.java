@@ -22,7 +22,8 @@ Connection connection;
 				+ " ACCOUNT_CD,"
 				+ " ACCOUNT_DTL_CD,"
 				+ " BALANCE,"
-				+ " TRANSFER_RATE) "
+				+ " TRANSFER_RATE "
+				+ " LEGACY_ACCOUNT_NUM ) "
 				+ " VALUES ("
 				+ la.getAccountNum()
 				+ ", '"
@@ -33,6 +34,8 @@ Connection connection;
 				+ la.getBalance()
 				+ ","
 				+ la.getTransferRate()
+				+ ","
+				+ la.getLegacyAccountNum()
 				+ '"'
 				+ ")";
 		
@@ -160,7 +163,8 @@ Connection connection;
 						                              resultSet.getString("ACCOUNT_CD") ,
 						                              resultSet.getString("ACCOUNT_DTL_CD") ,
 						                              resultSet.getString("BALANCE") ,
-						                              resultSet.getString("TRANSFER_RATE")
+						                              resultSet.getString("TRANSFER_RATE"),
+						                              resultSet.getString("LEGACY_ACCOUNT_NUM")
 						                              );
 				
 				cnt++;

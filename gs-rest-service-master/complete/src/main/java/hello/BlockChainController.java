@@ -439,7 +439,7 @@ public class BlockChainController {
 		ChainCodeReturnParam chainCodeReturnParam = null;
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		
-		LegacyAccount la = new LegacyAccount(blckCustNum, amount,"1.0",accountCd , accountDtlCd );
+		LegacyAccount la = new LegacyAccount(blckCustNum, amount,"1.0",accountCd , accountDtlCd ,"");
 		
 		String currentBalance = laDao.selectAccountBalance(la);
 		String tobeBalance = "";
@@ -470,10 +470,10 @@ public class BlockChainController {
 			}
 			
 		}else {
-			chainCodeReturnParam = new ChainCodeReturnParam("","","Wrong AccountCd");
+			chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 		}
 		
-		return chainCodeReturnParam;
+		return new ChainCodeReturnParam("","","0");
 	}
 	
 	@RequestMapping("/changeFrom") // 블록체인 포인트에서 해당 재화로 환전
@@ -484,7 +484,7 @@ public class BlockChainController {
 		ChainCodeReturnParam chainCodeReturnParam = null;
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		
-		LegacyAccount la = new LegacyAccount(blckCustNum, amount,"1.0",accountCd , accountDtlCd );
+		LegacyAccount la = new LegacyAccount(blckCustNum, amount,"1.0",accountCd , accountDtlCd ,"" );
 		
 		String currentBalance = laDao.selectAccountBalance(la);
 		String tobeBalance = "";
@@ -554,7 +554,7 @@ public class BlockChainController {
 											@RequestParam(value="accountCd", defaultValue="") String accountCd,
 											@RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd ) {
 		
-		LegacyAccount la = new LegacyAccount(blckCustNum, "","",accountCd , accountDtlCd );
+		LegacyAccount la = new LegacyAccount(blckCustNum, "","",accountCd , accountDtlCd ,"");
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		String currentBalance = laDao.selectAccountBalance(la);
 		
@@ -569,19 +569,31 @@ public class BlockChainController {
 		
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		
-		LegacyAccount la = new LegacyAccount(blckCustNum,"1000000","1.0",accountCd,accountDtlCd);
+		LegacyAccount la = new LegacyAccount(blckCustNum,"1000000","1.0",accountCd,accountDtlCd ,"");
 		
 		if (accountCd.equals("bank")) {
+			
+			la.setLegacyAccountNum("123-45678-901" + accountDtlCd + blckCustNum );
+			
 			laDao.deposit(la);
 		}else if (accountCd.equals("eCash")) {
+			
+			la.setLegacyAccountNum("1234-5678-90" + accountDtlCd + "000"+ blckCustNum );
+			
 			la.setBalance("100000");
 			la.setTransferRate("1.1");
 			laDao.deposit(la);
 		}else if (accountCd.equals("point")) {
+			
+			la.setLegacyAccountNum("member"+ blckCustNum );
+			
 			la.setBalance("500000");
 			la.setTransferRate("5.0");
 			laDao.deposit(la);
 		}else if (accountCd.equals("gameMoney")) {
+			
+			la.setLegacyAccountNum("player"+ blckCustNum );
+			
 			la.setBalance("10000");
 			la.setTransferRate("0.1");
 			laDao.deposit(la);
@@ -603,7 +615,7 @@ public class BlockChainController {
 	}
 	
 		
-	
+	/*
 	private boolean initAccount(String blckChnCustNum) {
 		
 		LegacyAccountDao laDao = new LegacyAccountDao();
@@ -658,4 +670,5 @@ public class BlockChainController {
 		
 		return true;
 	}
+	*/
 }

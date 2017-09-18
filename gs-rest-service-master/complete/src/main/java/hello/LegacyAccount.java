@@ -7,6 +7,7 @@ public class LegacyAccount {
 	private String transferRate;
 	private String accountCd;
 	private String accountDtlCd;
+	private String legacyAccountNum;
 	
 	/*
 	 * accountCd
@@ -41,6 +42,12 @@ public class LegacyAccount {
 	
 	 */
 	
+	public String getLegacyAccountNum() {
+		return legacyAccountNum;
+	}
+	public void setLegacyAccountNum(String legacyAccountNum) {
+		this.legacyAccountNum = legacyAccountNum;
+	}
 	public String getAccountNum() {
 		return accountNum;
 	}
@@ -72,13 +79,14 @@ public class LegacyAccount {
 		this.accountDtlCd = accountDtlCd;
 	}
 	public LegacyAccount(String accountNum, String balance, String transferRate, String accountCd,
-			String accountDtlCd) {
+			String accountDtlCd, String legacyAccountNum) {
 		super();
 		this.accountNum = accountNum;
 		this.balance = balance;
 		this.transferRate = transferRate;
 		this.accountCd = accountCd;
 		this.accountDtlCd = accountDtlCd;
+		this.legacyAccountNum = legacyAccountNum;
 	}
 
 	
