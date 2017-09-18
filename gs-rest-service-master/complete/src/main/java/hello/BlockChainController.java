@@ -75,7 +75,7 @@ public class BlockChainController {
 				blockChainReturnParam.setReturnCode("1001");
 				blockChainReturnParam.setBlckCustNum(String.valueOf(blckChnCustNum));
 				// Legacy 계정 초기화
-				initAccount(String.valueOf(blckChnCustNum));
+				//initAccount(String.valueOf(blckChnCustNum));
 			}else{
 				blockChainReturnParam.setReturnCode("1003");
 			}
