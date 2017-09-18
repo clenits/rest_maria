@@ -401,6 +401,10 @@ public class BlockChainController {
 			JSONArray histJSONArray = (JSONArray) returnMsg.get("AccountHist");
 			System.out.println("histJSONArray = " + histJSONArray);
 			
+			if(histJSONArray.size() == 0) {
+				return buypassStructArray;
+			}
+			
 			buypassStructArray = new BuypassStruct[histJSONArray.size()];
 			
 			for ( int i = 0 ; i < histJSONArray.size() ; i ++ ) {
@@ -413,7 +417,9 @@ public class BlockChainController {
 						, blockChainAccountHist.get("Sender").toString()
 						, blockChainAccountHist.get("Receiver").toString()
 						, blockChainAccountHist.get("Amount").toString()
-						, blockChainAccountHist.get("Event_dtm").toString() );
+						, blockChainAccountHist.get("Event_dtm").toString()
+						, blockChainAccountHist.get("AccountCd").toString()
+						, blockChainAccountHist.get("AccountDtlCd").toString());
 				
 				buypassStructArray[i] = buypassStruct;
 			}
