@@ -117,7 +117,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/query";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypassV";
+		String chaincodeId = "buypass1";
 		String args = blckCustNum;
 		
 		try {
@@ -189,7 +189,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/invoke";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypassV";
+		String chaincodeId = "buypass1";
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
@@ -267,7 +267,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/invoke";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypassV";
+		String chaincodeId = "buypass1";
 		
 		BlockChainDAO bcDao = new BlockChainDAO();
 		
@@ -349,7 +349,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/query";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypassV";
+		String chaincodeId = "buypass1";
 		String args = blckCustNum;
 		
 		try {
