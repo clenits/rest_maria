@@ -485,6 +485,8 @@ public class BlockChainController {
 		String currentBalance = laDao.selectAccountBalance(la);
 		String tobeBalance = "";
 		
+		chainCodeReturnParam = new ChainCodeReturnParam("","","0");
+		
 		if(accountCd.equals("bank")) {
 			//은행 출금
 			
@@ -537,7 +539,7 @@ public class BlockChainController {
 				deposit(blckCustNum,"-"+tobeAmount);
 			}
 		}else {
-			chainCodeReturnParam = new ChainCodeReturnParam("","","Wrong AccountCd");
+			chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 		}
 		
 		return chainCodeReturnParam;
