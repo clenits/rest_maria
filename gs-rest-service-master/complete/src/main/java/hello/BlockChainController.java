@@ -428,7 +428,7 @@ public class BlockChainController {
 	}
 	
 	@RequestMapping("/changeInto") // 블록체인 포인트로 환전
-	public ChainCodeReturnParam change( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
+	public ChainCodeReturnParam changeInto( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
                                           @RequestParam(value="amount", defaultValue="") String amount ,
                                           @RequestParam(value="accountCd", defaultValue="") String accountCd,
                                           @RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd  ) {
@@ -469,11 +469,107 @@ public class BlockChainController {
 			chainCodeReturnParam = new ChainCodeReturnParam("","","Wrong AccountCd");
 		}
 		
-		
-	
 		return chainCodeReturnParam;
 	}
 	
+	@RequestMapping("/changeFrom") // 블록체인 포인트에서 해당 재화로 환전
+	public ChainCodeReturnParam changeFrom( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
+                                          @RequestParam(value="amount", defaultValue="") String amount ,
+                                          @RequestParam(value="accountCd", defaultValue="") String accountCd,
+                                          @RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd  ) {
+		ChainCodeReturnParam chainCodeReturnParam = null;
+		LegacyAccountDao laDao = new LegacyAccountDao();
+		
+		LegacyAccount la = new LegacyAccount(blckCustNum, amount,"1.0",accountCd , accountDtlCd );
+		
+		String currentBalance = laDao.selectAccountBalance(la);
+		String tobeBalance = "";
+		
+		if(accountCd.equals("bank")) {
+			//은행 출금
+			
+			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) + Integer.valueOf(amount) );
+			
+			la.setBalance(tobeBalance);
+			
+			if( laDao.updateBalace(la) ) {
+				deposit(blckCustNum,"-"+ amount);
+			}
+			
+		}else if(accountCd.equals("eCash")){
+			
+			la.setTransferRate("1.1");
+			
+			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) + Integer.valueOf(amount) * 1.1 );
+			
+			la.setBalance(tobeBalance);
+			
+			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
+			
+			if( laDao.updateBalace(la) ) {
+				deposit(blckCustNum,"-"+tobeAmount);
+			}
+			
+		}else if(accountCd.equals("point")){
+			
+			la.setTransferRate("5.0");
+			
+			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) + Integer.valueOf(amount) * 5 );
+			
+			la.setBalance(tobeBalance);
+			
+			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
+			
+			if( laDao.updateBalace(la) ) {
+				deposit(blckCustNum,"-"+tobeAmount);
+			}
+			
+		}else if(accountCd.equals("gameMoney")){
+			la.setTransferRate("0.1");
+			
+			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) + Integer.valueOf(amount) * 0.1 );
+			
+			la.setBalance(tobeBalance);
+			
+			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
+			
+			if( laDao.updateBalace(la) ) {
+				deposit(blckCustNum,"-"+tobeAmount);
+			}
+		}else {
+			chainCodeReturnParam = new ChainCodeReturnParam("","","Wrong AccountCd");
+		}
+		
+		return chainCodeReturnParam;
+	}
+	
+	@RequestMapping("/checkLegacyAccount") 
+	private String checkLegacyAccount(@RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
+											@RequestParam(value="accountCd", defaultValue="") String accountCd,
+											@RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd ) {
+		
+		LegacyAccount la = new LegacyAccount(blckCustNum, "","",accountCd , accountDtlCd );
+		LegacyAccountDao laDao = new LegacyAccountDao();
+		String currentBalance = laDao.selectAccountBalance(la);
+		
+		return currentBalance;
+		
+	}
+	
+	@RequestMapping("/listLegacyAccount") 
+	private LegacyAccount[] listLegacyAccount(@RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ) {
+		
+		LegacyAccountDao laDao = new LegacyAccountDao();
+		
+		LegacyAccount[] laList = laDao.selectLegacyAccount(blckCustNum);
+		
+		return laList;
+		
+	}
+	
+	
+	
+		
 	
 	private boolean initAccount(String blckChnCustNum) {
 		

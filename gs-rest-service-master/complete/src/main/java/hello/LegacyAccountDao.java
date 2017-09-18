@@ -99,11 +99,11 @@ Connection connection;
 		Statement statement = null;
 		String strBalance = "-1";
 		String query = "SELECT "
-				+ "BALANCE "
-				+ "FROM LegacyAccount "
-				+ "WHERE ACCOUNT_NUM = "  + '"' + la.getAccountNum() + '"'
-				+ "AND ACCOUNT_CD = " + '"' + la.getAccountCd() + '"'
-				+ "AND ACCOUNT_DTL_CD = "  + '"' + la.getAccountDtlCd()+ '"';
+				+ " BALANCE "
+				+ " FROM LegacyAccount "
+				+ " WHERE ACCOUNT_NUM = "  + '"' + la.getAccountNum() + '"'
+				+ " AND ACCOUNT_CD = " + '"' + la.getAccountCd() + '"'
+				+ " AND ACCOUNT_DTL_CD = "  + '"' + la.getAccountDtlCd()+ '"';
 		
 		try{
 			Class.forName(driver);
@@ -130,4 +130,57 @@ Connection connection;
 
 		return strBalance;
 	}
+	
+	public LegacyAccount[] selectLegacyAccount(String blckCustNum ) {
+		
+		ResultSet resultSet = null;
+		Statement statement = null;
+		
+		LegacyAccount[] laArray = new LegacyAccount[12];
+		
+		String query =" SELECT "
+				+ " ACCOUNT_NUM ,"
+				+ " ACCOUNT_CD  , "
+				+ " ACCOUNT_DTL_CD   , "
+				+ " BALANCE   , "
+				+ " TRANSFER_RATE  "
+				+ " FROM LegacyAccount "
+				+ " WHERE ACCOUNT_NUM = " + '"' + blckCustNum + '"';
+				
+		try{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, id, pw);
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+			
+			int cnt = 0;
+			
+			while(resultSet.next()){
+				laArray[cnt] = new LegacyAccount( resultSet.getString("ACCOUNT_NUM") ,
+						                              resultSet.getString("ACCOUNT_CD") ,
+						                              resultSet.getString("ACCOUNT_DTL_CD") ,
+						                              resultSet.getString("BALANCE") ,
+						                              resultSet.getString("TRANSFER_RATE")
+						                              );
+				
+				cnt++;
+			}
+
+			
+		}catch(Exception e){
+			System.out.println(e);
+		}finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(statement != null) statement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+		
+		return laArray;
+		
+	}
+	
 }
