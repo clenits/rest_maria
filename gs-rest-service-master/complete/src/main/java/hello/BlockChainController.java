@@ -11,6 +11,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -436,6 +438,14 @@ public class BlockChainController {
                                           @RequestParam(value="amount", defaultValue="") String amount ,
                                           @RequestParam(value="accountCd", defaultValue="") String accountCd,
                                           @RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd  ) {
+		
+		System.out.println("------------- changeInto start -------------");
+		System.out.println("blckCustNum= " + blckCustNum );
+		System.out.println("amount= " + amount );
+		System.out.println("accountCd= " + accountCd );
+		System.out.println("accountDtlCd= " + accountDtlCd );
+		
+		
 		ChainCodeReturnParam chainCodeReturnParam = null;
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		
@@ -450,8 +460,9 @@ public class BlockChainController {
 			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) - Integer.valueOf(amount) );
 			
 			la.setBalance(tobeBalance);
-			
+			System.out.println("------------- changeInto Legacy Account update -------------");
 			if( laDao.updateBalace(la) ) {
+				System.out.println("------------- changeInto BlockChain Account update -------------");
 				deposit(blckCustNum,amount,accountCd,accountDtlCd);
 			}
 			
@@ -460,19 +471,20 @@ public class BlockChainController {
 			la.setTransferRate("0.9");
 			
 			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) - Integer.valueOf(amount) );
-			
-			la.setBalance(tobeBalance);
-			
+
 			String tobeAmount = String.valueOf( Integer.valueOf(amount) * 9 / 10 );
 			
+			la.setBalance(tobeBalance);
+			System.out.println("------------- changeInto Legacy Account update -------------");
 			if( laDao.updateBalace(la) ) {
-				deposit(blckCustNum,amount,accountCd,accountDtlCd);
+				System.out.println("------------- changeInto BlockChain Account update -------------");
+				deposit(blckCustNum,tobeAmount,accountCd,accountDtlCd);
 			}
 			
 		}else {
 			chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 		}
-		
+		System.out.println("------------- changeInto end -------------");
 		return new ChainCodeReturnParam("","","0");
 	}
 	
@@ -481,6 +493,13 @@ public class BlockChainController {
                                           @RequestParam(value="amount", defaultValue="") String amount ,
                                           @RequestParam(value="accountCd", defaultValue="") String accountCd,
                                           @RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd  ) {
+		
+		System.out.println("------------- changeFrom start -------------");
+		System.out.println("blckCustNum= " + blckCustNum );
+		System.out.println("amount= " + amount );
+		System.out.println("accountCd= " + accountCd );
+		System.out.println("accountDtlCd= " + accountDtlCd );
+		
 		ChainCodeReturnParam chainCodeReturnParam = null;
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		
@@ -497,8 +516,9 @@ public class BlockChainController {
 			tobeBalance = String.valueOf(  Integer.valueOf(currentBalance) + Integer.valueOf(amount) );
 			
 			la.setBalance(tobeBalance);
-			
+			System.out.println("------------- changeFrom Legacy bank Account update -------------");
 			if( laDao.updateBalace(la) ) {
+				System.out.println("------------- changeFrom BlockChain Account update -------------");
 				deposit(blckCustNum,"-"+ amount,accountCd,accountDtlCd);
 			}
 			
@@ -511,8 +531,9 @@ public class BlockChainController {
 			la.setBalance(tobeBalance);
 			
 			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
-			
+			System.out.println("------------- changeFrom Legacy eCash Account update -------------");
 			if( laDao.updateBalace(la) ) {
+				System.out.println("------------- changeFrom BlockChain Account update -------------");
 				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
 			}
 			
@@ -525,8 +546,9 @@ public class BlockChainController {
 			la.setBalance(tobeBalance);
 			
 			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
-			
+			System.out.println("------------- changeFrom Legacy point Account update -------------");
 			if( laDao.updateBalace(la) ) {
+				System.out.println("------------- changeFrom BlockChain Account update -------------");
 				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
 			}
 			
@@ -538,14 +560,15 @@ public class BlockChainController {
 			la.setBalance(tobeBalance);
 			
 			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
-			
+			System.out.println("------------- changeFrom Legacy gameMoney Account update -------------");
 			if( laDao.updateBalace(la) ) {
+				System.out.println("------------- changeFrom BlockChain Account update -------------");
 				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
 			}
 		}else {
 			chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
 		}
-		
+		System.out.println("------------- changeFrom end -------------");
 		return chainCodeReturnParam;
 	}
 	
@@ -553,11 +576,16 @@ public class BlockChainController {
 	private String checkLegacyAccount(@RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
 											@RequestParam(value="accountCd", defaultValue="") String accountCd,
 											@RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd ) {
+		System.out.println("------------- checkLegacyAccount start -------------");
+		System.out.println("blckCustNum= " + blckCustNum );
+		System.out.println("accountCd= " + accountCd );
+		System.out.println("accountDtlCd= " + accountDtlCd );
 		
 		LegacyAccount la = new LegacyAccount(blckCustNum, "","",accountCd , accountDtlCd ,"");
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		String currentBalance = laDao.selectAccountBalance(la);
 		
+		System.out.println("------------- checkLegacyAccount end -------------");
 		return currentBalance;
 		
 	}
@@ -566,6 +594,11 @@ public class BlockChainController {
 	private LegacyAccount createLegacyAccount(@RequestParam(value="blckCustNum", defaultValue="") String blckCustNum,
 			@RequestParam(value="accountCd", defaultValue="") String accountCd,
 			@RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd ) {
+		
+		System.out.println("------------- createLegacyAccount start -------------");
+		System.out.println("blckCustNum= " + blckCustNum );
+		System.out.println("accountCd= " + accountCd );
+		System.out.println("accountDtlCd= " + accountDtlCd );
 		
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		
@@ -599,17 +632,21 @@ public class BlockChainController {
 			laDao.deposit(la);
 		}
 		
+		System.out.println("------------- createLegacyAccount end -------------");
+		
 		return la;
 		
 	}
 	
 	@RequestMapping("/listLegacyAccount") 
 	private LegacyAccount[] listLegacyAccount(@RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ) {
+		System.out.println("------------- listLegacyAccount start -------------");
+		System.out.println("blckCustNum= " + blckCustNum );
 		
 		LegacyAccountDao laDao = new LegacyAccountDao();
 		
 		LegacyAccount[] laList = laDao.selectLegacyAccount(blckCustNum);
-		
+		System.out.println("------------- listLegacyAccount end -------------");
 		return laList;
 		
 	}
