@@ -22,7 +22,7 @@ Connection connection;
 				+ " ACCOUNT_CD,"
 				+ " ACCOUNT_DTL_CD,"
 				+ " BALANCE,"
-				+ " TRANSFER_RATE "
+				+ " TRANSFER_RATE, "
 				+ " LEGACY_ACCOUNT_NUM ) "
 				+ " VALUES ( '"
 				+ la.getAccountNum()
