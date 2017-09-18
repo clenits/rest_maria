@@ -24,19 +24,19 @@ Connection connection;
 				+ " BALANCE,"
 				+ " TRANSFER_RATE "
 				+ " LEGACY_ACCOUNT_NUM ) "
-				+ " VALUES ("
+				+ " VALUES ( '"
 				+ la.getAccountNum()
-				+ ", '"
+				+ "', '"
 				+ la.getAccountCd()
-				+ "',"
+				+ "', '"
 				+ la.getAccountDtlCd()
-				+ ","
+				+ "', '"
 				+ la.getBalance()
-				+ ","
+				+ "', '"
 				+ la.getTransferRate()
-				+ ","
+				+ "', '"
 				+ la.getLegacyAccountNum()
-				+ '"'
+				+ "'"
 				+ ")";
 		
 		try{
