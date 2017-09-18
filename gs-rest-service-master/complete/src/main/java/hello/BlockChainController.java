@@ -117,7 +117,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/query";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypassV3";
+		String chaincodeId = "buypassV";
 		String args = blckCustNum;
 		
 		try {
@@ -180,19 +180,23 @@ public class BlockChainController {
 	
 	@RequestMapping("/deposit") // 입금
 	public ChainCodeReturnParam deposit( @RequestParam(value="blckCustNum", defaultValue="") String blckCustNum ,
-			                             @RequestParam(value="amount", defaultValue="") String amount ) {
+			                             @RequestParam(value="amount", defaultValue="") String amount ,
+                                         @RequestParam(value="accountCd", defaultValue="") String accountCd,
+                                         @RequestParam(value="accountDtlCd", defaultValue="") String accountDtlCd ) {
 		String USER_AGENT = "Mozilla/5.0";
 		
 		ChainCodeReturnParam chainCodeReturnParam = null;
 		
 		String url = "http://blockchain.skcc.com:4000/invoke";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypassV3";
+		String chaincodeId = "buypassV";
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
 		
-		String args = blckCustNum + " " + amount + " " + sdf.format(date);
+		BlockChainDAO cbDao = new BlockChainDAO();
+		
+		String args = blckCustNum + " " + cbDao.selectCustNmbyBlckCustNum(blckCustNum) + " " + amount + " " + sdf.format(date) + " " + accountCd + " " + accountDtlCd;
 			
 		
 		try {
@@ -263,7 +267,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/invoke";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypassV3";
+		String chaincodeId = "buypassV";
 		
 		BlockChainDAO bcDao = new BlockChainDAO();
 		
@@ -276,7 +280,7 @@ public class BlockChainController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
 		
-		String args = blckCustNum + " " + amount + " " + blockChain.getBlckCustNum() + " " + sdf.format(date);;
+		String args = blckCustNum + " " + bcDao.selectCustNmbyBlckCustNum(blckCustNum) + " " + amount + " " + blockChain.getBlckCustNum() + " " + bcDao.selectCustNmbySvcNum(svcNum)  + " " + sdf.format(date);
 		
 		try {
 			URL obj = new URL(url);
@@ -345,7 +349,7 @@ public class BlockChainController {
 		
 		String url = "http://blockchain.skcc.com:4000/query";
 		String targetPeers = "{\"org1\":[\"peer1\"]}";
-		String chaincodeId = "buypassV3";
+		String chaincodeId = "buypassV";
 		String args = blckCustNum;
 		
 		try {
@@ -448,7 +452,7 @@ public class BlockChainController {
 			la.setBalance(tobeBalance);
 			
 			if( laDao.updateBalace(la) ) {
-				deposit(blckCustNum,amount);
+				deposit(blckCustNum,amount,accountCd,accountDtlCd);
 			}
 			
 		}else if(accountCd.equals("eCash")){
@@ -459,10 +463,10 @@ public class BlockChainController {
 			
 			la.setBalance(tobeBalance);
 			
-			String tobeAmount = String.valueOf( Integer.valueOf(amount) * 0.9 );
+			String tobeAmount = String.valueOf( Integer.valueOf(amount) * 9 / 10 );
 			
 			if( laDao.updateBalace(la) ) {
-				deposit(blckCustNum,tobeAmount);
+				deposit(blckCustNum,amount,accountCd,accountDtlCd);
 			}
 			
 		}else {
@@ -495,7 +499,7 @@ public class BlockChainController {
 			la.setBalance(tobeBalance);
 			
 			if( laDao.updateBalace(la) ) {
-				deposit(blckCustNum,"-"+ amount);
+				deposit(blckCustNum,"-"+ amount,accountCd,accountDtlCd);
 			}
 			
 		}else if(accountCd.equals("eCash")){
@@ -509,7 +513,7 @@ public class BlockChainController {
 			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
 			
 			if( laDao.updateBalace(la) ) {
-				deposit(blckCustNum,"-"+tobeAmount);
+				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
 			}
 			
 		}else if(accountCd.equals("point")){
@@ -523,7 +527,7 @@ public class BlockChainController {
 			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
 			
 			if( laDao.updateBalace(la) ) {
-				deposit(blckCustNum,"-"+tobeAmount);
+				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
 			}
 			
 		}else if(accountCd.equals("gameMoney")){
@@ -536,7 +540,7 @@ public class BlockChainController {
 			String tobeAmount = String.valueOf( Integer.valueOf(amount) );
 			
 			if( laDao.updateBalace(la) ) {
-				deposit(blckCustNum,"-"+tobeAmount);
+				deposit(blckCustNum,"-"+tobeAmount,accountCd,accountDtlCd);
 			}
 		}else {
 			chainCodeReturnParam = new ChainCodeReturnParam("","","-1");
