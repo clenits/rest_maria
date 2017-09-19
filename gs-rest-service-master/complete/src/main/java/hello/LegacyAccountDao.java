@@ -139,7 +139,9 @@ Connection connection;
 		ResultSet resultSet = null;
 		Statement statement = null;
 		
-		LegacyAccount[] laArray = null;
+		LegacyAccount[] laArray = new LegacyAccount[12];
+		
+		LegacyAccount[] rtLaArray = null;
 		
 		String query =" SELECT "
 				+ " ACCOUNT_NUM ,"
@@ -158,7 +160,6 @@ Connection connection;
 			resultSet = statement.executeQuery(query);
 			
 			int cnt = 0;
-			laArray = new LegacyAccount[resultSet.getFetchSize()];
 			
 			while(resultSet.next()){
 				laArray[cnt] = new LegacyAccount( resultSet.getString("ACCOUNT_NUM") ,
@@ -170,6 +171,15 @@ Connection connection;
 						                              );
 				
 				cnt++;
+			}
+			
+			if(cnt > 0 ) {
+				rtLaArray = new LegacyAccount[cnt];
+			}
+			
+			for(int i = 0 ; i < cnt ; i++) {
+				
+				rtLaArray[i] = laArray[i];
 			}
 
 			
@@ -185,7 +195,7 @@ Connection connection;
 			}
 		}
 		
-		return laArray;
+		return rtLaArray;
 		
 	}
 	
