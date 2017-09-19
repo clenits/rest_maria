@@ -163,10 +163,10 @@ Connection connection;
 			
 			while(resultSet.next()){
 				laArray[cnt] = new LegacyAccount( resultSet.getString("ACCOUNT_NUM") ,
+													  resultSet.getString("BALANCE") ,
+													  resultSet.getString("TRANSFER_RATE"),
 						                              resultSet.getString("ACCOUNT_CD") ,
 						                              resultSet.getString("ACCOUNT_DTL_CD") ,
-						                              resultSet.getString("BALANCE") ,
-						                              resultSet.getString("TRANSFER_RATE"),
 						                              resultSet.getString("LEGACY_ACCOUNT_NUM")
 						                              );
 				
