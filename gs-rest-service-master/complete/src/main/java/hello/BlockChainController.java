@@ -101,7 +101,7 @@ public class BlockChainController {
 		
 		// 블럭체인정보 존재 여부 확인
 		if(blckChn != null ){
-			blockChainReturnParam.setReturnCode("2001");
+			blockChainReturnParam.setReturnCode(blckChn.getSvcMgmtNum());
 			blockChainReturnParam.setBlckCustNum(blckChn.getBlckCustNum());	// 블록체인 고객번호 
 		}else{
 			blockChainReturnParam.setReturnCode("2002");
@@ -164,7 +164,7 @@ public class BlockChainController {
 			chainCodeReturnParam = new ChainCodeReturnParam(
 															blockChainAccount.get("BlckCustNum").toString()
 															, blockChainAccount.get("Balance").toString()
-															,"0");
+															,"k");
 			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block

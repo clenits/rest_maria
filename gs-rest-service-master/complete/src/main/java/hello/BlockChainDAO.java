@@ -27,10 +27,12 @@ public class BlockChainDAO {
 				+ "BLCK.CUST_NUM ,"
 				+ "BLCK.UUID ,"
 				+ "BLCK.LAST_LOGON_DTM ,"
-				+ "BLCK.FST_CRE_DTM ,"
+				+ "BLCK.FST_CRE_DTM , "
+				+ "CUST.CUST_NM , "
 				+ "BLCK.LAST_UPD_DTM  "
-				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC "
+				+ "FROM BLCK_CHN_MBR_INFO BLCK , SVC_INFO SVC , CUST_INFO CUST "
 				+ "WHERE BLCK.SVC_MGMT_NUM = SVC.SVC_MGMT_NUM "
+				+ "AND CUST.CUST_NUM = BLCK.CUST_NUM "
 				+ "AND BLCK.UUID = " + '"' + uuid + '"'
 				+ "AND BLCK.PWD = " + pwd;
 		
@@ -43,7 +45,8 @@ public class BlockChainDAO {
 			while(resultSet.next()){
 				blockChain = new BlockChain(resultSet.getString("BLCK_CUST_NUM"),
 						resultSet.getString("PWD"),
-						resultSet.getString("SVC_MGMT_NUM"),
+						//resultSet.getString("SVC_MGMT_NUM"),
+						resultSet.getString("CUST_NM"), // SVC_MGMT_NUM > CUST_NM
 						resultSet.getString("CUST_NUM"),
 						resultSet.getString("UUID"),
 						resultSet.getString("LAST_LOGON_DTM"),
