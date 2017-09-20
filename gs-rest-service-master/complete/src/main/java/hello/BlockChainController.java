@@ -164,7 +164,7 @@ public class BlockChainController {
 			chainCodeReturnParam = new ChainCodeReturnParam(
 															blockChainAccount.get("BlckCustNum").toString()
 															, blockChainAccount.get("Balance").toString()
-															,"k");
+															,"0");
 			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
